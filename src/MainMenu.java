@@ -13,7 +13,11 @@ import java.awt.GridBagConstraints;
 import java.awt.Dimension;
 import java.awt.Font;
 
-
+/**
+ * Class handles the main menu frame and user menu inputs
+ * @author Aleksejs Loginovs
+ *
+ */
 public class MainMenu implements ActionListener, WindowListener
 {
 	protected JFrame mainMenuFrame;
@@ -22,12 +26,13 @@ public class MainMenu implements ActionListener, WindowListener
 	protected JButton loadGame;
 	protected JButton exit;
 	
-	private Game game;
-	
+	/**
+	 * Default menu constructor that initialises the frame and displays it
+	 */
 	public MainMenu()
 	{
 		mainMenuFrame = new JFrame(); //a window that holds everything
-		mainMenuContent = new JPanel(); //panel that contains all the stuff
+		mainMenuContent = new JPanel(); //panel that contains the main content of the frame
 		mainMenuContent.setLayout(new GridBagLayout()); //set the layout of that panel
 		
 		setupPanel();
@@ -49,6 +54,9 @@ public class MainMenu implements ActionListener, WindowListener
 		
 	}
 	
+	/**
+	 * Initialises all the frame contents and adds them to the panel
+	 */
 	public void setupPanel()
 	{
 		Font buttonFont = new Font("Arial", Font.ITALIC, 20);
@@ -83,20 +91,26 @@ public class MainMenu implements ActionListener, WindowListener
 		mainMenuContent.add(exit, constr);
 	}
 	
+	/**
+	 * Method is used to set the menu frame visible
+	 */
 	public void show()
 	{
 		mainMenuFrame.setVisible(true);
-	}
+	}	
 	
-	
-	
-	
+	/**
+	 * Method is used to confirm that user wants to exit the program and stop it's execution
+	 * or get back to the game
+	 */
 	public static void exit()
 	{
 		int sureExit = 1;
+		//displays the confirmation dialog
 		int windowOption = JOptionPane.YES_NO_OPTION;
 		String text = "Are you sure you want to exit?";
 		sureExit = JOptionPane.showConfirmDialog(null,text, "Exit the game", windowOption);
+		
 		if(sureExit == 0)
 		{
 			System.exit(-1);
@@ -107,13 +121,15 @@ public class MainMenu implements ActionListener, WindowListener
 		}
 	}
 	
+	/**
+	 * Method handles the main menu user button clicks
+	 */
 	public void actionPerformed(ActionEvent event)
 	{
 		JButton button = (JButton)event.getSource(); //the button that caused the event
 		if(button == newGame)
 		{
-			game = new Game(mainMenuFrame, "savedGames/defaultMap1.map");
-			
+			new Game(mainMenuFrame, "savedGames/defaultMap1.map");
 		}
 		else if(button == loadGame)
 		{
@@ -126,54 +142,39 @@ public class MainMenu implements ActionListener, WindowListener
 		}
 	}
 	
+	/**
+	 * Method is used to prevent program from closing the window after the X button was pressed
+	 * and to call the exit confirmation method instead
+	 */
 	public void windowClosing(WindowEvent event)
 	{
 		MainMenu.exit();
 	}
 	
-	public void windowClosed(WindowEvent event)
-	{
-		//notUsed
-	}
-	
-	public void windowIconified(WindowEvent event)
-	{
-		//notUsed
-	}
-	
-	public void windowDeiconified(WindowEvent event)
-	{
-		//notUsed
-	}
-	
-	public void windowOpened(WindowEvent event)
-	{
-		//notUsed
-	}
-	
-	public void windowActivated(WindowEvent event)
-	{
-		//notUsed
-	}
-	
-	public void windowDeactivated(WindowEvent event)
-	{
-		//notUsed
-	}
-	
-	public void setGame(Game game)
-	{
-		this.game = game;
-	}
-	
+	/**
+	 * Method is used to get the main menu frame
+	 * @return main menu frame
+	 */
 	public JFrame getFrame()
 	{
 		return mainMenuFrame;
 	}
 	
+	/**
+	 * Main method that is used to launch program
+	 * @param args
+	 */
 	public static void main(String args[])
 	{
 		MainMenu menu = new MainMenu();
 		menu.show();
 	}
+	
+	//methods not used in tbe program
+	public void windowClosed(WindowEvent event){}
+	public void windowIconified(WindowEvent event){}
+	public void windowDeiconified(WindowEvent event){}
+	public void windowOpened(WindowEvent event){}
+	public void windowActivated(WindowEvent event){}
+	public void windowDeactivated(WindowEvent event){}
 }

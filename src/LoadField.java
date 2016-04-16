@@ -2,84 +2,92 @@ import java.io.File;
 
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JOptionPane;
 import javax.swing.JList;
-import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-public class LoadField implements ActionListener
+/**
+ * Class is used to handle the game loading screen 
+ * 
+ * @author Aleksejs Loginovs
+ */
+public class LoadField
 {
-	JFrame loadFrame;
-	JButton load;
-	JButton cancel;
 	JList<String> listOfLoads;
 	MainMenu mainMenu;
 	
+	/**
+	 * The constructor that stores the main menu frame in one of the class fields
+	 * @param mainMenu main menu frame
+	 */
 	public LoadField(MainMenu mainMenu)
 	{
 		this.mainMenu = mainMenu;
 	}
 	
+	/**
+	 * Method is used to set up the load frame and then get the name of the file selected by user.
+	 * Then it creates the game object passing the file path
+	 */
 	public void loadField()
 	{
-		loadFrame = new JFrame();
+		//initialises content panel and its contents
 		JPanel contentPanel = new JPanel();
-		load = new JButton("Load");
-		load.addActionListener(this);
-		cancel = new JButton("Cancel");
 		
+		//initialises, sets up and fills in the list of available game files
 		listOfLoads = new JList<String>(getListOfLoads());
 		listOfLoads.setSelectedIndex(0);
 		listOfLoads.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane list = new JScrollPane(listOfLoads);
 		
-		contentPanel.setLayout(new GridBagLayout());
-		
+		//sets up content panel and adds the list to it
+		contentPanel.setLayout(new GridBagLayout());		
 		GridBagConstraints constr = new GridBagConstraints();
 		constr.gridwidth = 2;
 		contentPanel.add(list, constr);
 		
-		
-		String[] options = {"Cancel", "Load"};
+		//displays the dialog box with the list and buttons on it
+		String[] options = {"Cancel", "Load"}; //button names of the option dialog buttons
 		int ifLoad = JOptionPane.showOptionDialog(null, contentPanel, "Load game", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
 		
+		//if user chose to load the file, load it
 		if(ifLoad == 1)
 		{
 			String item = listOfLoads.getSelectedValue();
 			String filePath = "savedGames/" + item + ".map";
-			loadFrame.dispose();
-			Game game = new Game(mainMenu.getFrame(), filePath);
-			mainMenu.setGame(game);
-		}
-		else 
-		{
-			loadFrame.dispose();
+			
+			//create new game passing the filename to it
+			new Game(mainMenu.getFrame(), filePath);
 		}
 	}
 	
+	/**
+	 * Method is used to get the array of filepaths to the games that player can load
+	 * @return array of filepaths to the games that the player can load
+	 */
 	public String[] getListOfLoads()
 	{
+		//initialises the variables necessary to read the files from the folder
 		ArrayList<String> arrayListOfFiles = new ArrayList<String>();
 		String[] listOfFiles = new String[0];
 		File[] arrayOfFiles = null;
-		File folder = new File("savedGames/");
+		File folder = new File("savedGames/"); //the folder to read files from
 		
+		//if the folder exists
 		if(folder.exists())
 		{
 			try
 			{
+				//get all the files in the folder
 				arrayOfFiles = folder.listFiles();
 				
+				//loop through all the filepaths in folder and add the ones with the .map extension
+				//to the array of files available for load
 				for(int i = 0; i < arrayOfFiles.length; i++)
 				{
 					String temp = arrayOfFiles[i].getPath();
@@ -91,13 +99,12 @@ public class LoadField implements ActionListener
 					}
 				}
 				
+				//transforms the arraylist into an array
 				listOfFiles = new String[arrayListOfFiles.size()];
 				for(int i = 0; i < arrayListOfFiles.size(); i++)
 				{
 					listOfFiles[i] = arrayListOfFiles.get(i);
 				}
-				
-				return listOfFiles;
 			}
 			catch(SecurityException e)
 			{
@@ -106,18 +113,4 @@ public class LoadField implements ActionListener
 		}
 		return listOfFiles;
 	}
-	
-	public void actionPerformed(ActionEvent event)
-	{
-		if(event.getSource() == load)
-		{
-			String item = listOfLoads.getSelectedValue();
-			String filePath = "savedGames/" + item + ".map";
-			loadFrame.dispose();
-			Game game = new Game(mainMenu.getFrame(), filePath);
-			game.enemyMovement();
-			mainMenu.setGame(game);
-		}
-	}
-	
 }

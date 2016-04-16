@@ -127,8 +127,6 @@ public class Rules
 				break;
 			}
 		}
-		
-		
 		return attacked;
 	}
 	
